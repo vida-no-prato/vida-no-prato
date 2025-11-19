@@ -8,8 +8,8 @@ const categoriasRoutes = require('./categorias');
 const checkoutRoutes = require('./checkout');
 const adminRoutes = require('./admin');
 const pedidoRoutes = require('./pedido');
-// Importar as rotas de autenticação
 const authRoutes = require('./auth');
+const colaboradorRoutes = require('./colaborador');
 
 // Usar as rotas
 router.use('/', homeRoutes);
@@ -18,7 +18,7 @@ router.use('/categorias', categoriasRoutes);
 router.use('/checkout', checkoutRoutes);
 router.use('/admin', adminRoutes);
 router.use('/pedido', pedidoRoutes);
-// Usar as rotas de autenticação
 router.use('/auth', authRoutes);
+router.use('/colaborador', colaboradorRoutes);
 
 module.exports = router;

@@ -248,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nome = document.getElementById('registerName').value;
             const email = document.getElementById('registerEmail').value;
             const telefone = document.getElementById('registerPhone').value;
+            const cnpj = document.getElementById('registerCnpj') ? document.getElementById('registerCnpj').value : '';
             const senha = document.getElementById('registerPassword').value;
             const confirmSenha = document.getElementById('confirmPassword').value;
 
@@ -259,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, email, telefone, senha })
+                body: JSON.stringify({ nome, email, telefone, senha, cnpj })
             });
 
             const data = await response.json();

@@ -6,8 +6,8 @@ exports.listar = async (req, res) => {
 };
 
 exports.criar = async (req, res) => {
-  const { nome, email, telefone, senha } = req.body;
-  await Usuario.criar({ nome, email, telefone, senha });
+  const { nome, email, telefone, senha, cnpj } = req.body;
+  await Usuario.criar({ nome, email, telefone, senha, cnpj });
   res.redirect("/usuarios");
 };
 

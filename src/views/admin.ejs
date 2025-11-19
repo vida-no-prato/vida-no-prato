@@ -12,21 +12,71 @@
     <div id="authModal" class="auth-modal">
         <div class="auth-modal-content">
             <div class="auth-header">
+                <span class="auth-close" onclick="closeAuthModal()">&times;</span>
                 <h2 id="authTitle">🌱 Acesso ao Painel de Colaboradores</h2>
-                <p>Bem-vindo! Faça login para gerenciar.</p>
+                <p>Bem-vindo! Faça login ou cadastre seu estabelecimento.</p>
             </div>
+            
             <div class="auth-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAdminTab('login')">Entrar</button>
+                    <button class="auth-tab" onclick="switchAdminTab('register')">Cadastrar</button>
+                </div>
+
                 <form class="auth-form active" id="loginForm">
                     <div class="form-group">
-                        <label for="loginEmail">E-mail</label>
-                        <input type="email" id="loginEmail" placeholder="seu@email.com" required value="admin@admin">
+                        <label for="loginCnpj">CNPJ (estabelecimento)</label>
+                        <input type="text" id="loginCnpj" placeholder="00.000.000/0000-00" required>
+                        <span class="input-icon">🏷️</span>
                     </div>
+                    
                     <div class="form-group">
                         <label for="loginPassword">Senha</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" required value="admin">
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
                         <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
                     </div>
+                    
                     <button type="submit" class="auth-submit">Entrar na Conta</button>
+                </form>
+
+                <form class="auth-form" id="adminRegisterForm">
+                    <div class="form-group">
+                        <label for="adminRegisterName">Nome do Responsável</label>
+                        <input type="text" id="adminRegisterName" placeholder="Seu nome completo" required>
+                        <span class="input-icon">👤</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminRegisterEmail">E-mail</label>
+                        <input type="email" id="adminRegisterEmail" placeholder="seu@email.com" required>
+                        <span class="input-icon">📧</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminRegisterPhone">Telefone</label>
+                        <input type="tel" id="adminRegisterPhone" placeholder="(11) 99999-9999">
+                        <span class="input-icon">📱</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminRegisterCnpj">CNPJ do Estabelecimento</label>
+                        <input type="text" id="adminRegisterCnpj" placeholder="00.000.000/0000-00" required>
+                        <span class="input-icon">🏢</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminRegisterPassword">Senha</label>
+                        <input type="password" id="adminRegisterPassword" placeholder="Mínimo 6 caracteres" required>
+                        <span class="password-toggle" onclick="togglePassword('adminRegisterPassword')">👁️</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminConfirmPassword">Confirmar Senha</label>
+                        <input type="password" id="adminConfirmPassword" placeholder="Confirme sua senha" required>
+                        <span class="password-toggle" onclick="togglePassword('adminConfirmPassword')">👁️</span>
+                    </div>
+                    
+                    <button type="submit" class="auth-submit">Criar Conta</button>
                 </form>
             </div>
         </div>
@@ -34,9 +84,17 @@
 
     <div id="adminPanelWrapper" style="display:none;">
         <header class="header">
-            <a href="/" class="btn-voltar-inicio">← Voltar ao Início</a>
-            <h1 style="text-align:center;margin-top:32px;">🌱 Vida no Prato - Painel dos Colaboradores</h1>
-            <p style="text-align:center;">Gerencie seus produtos e categorias</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <a href="/" class="btn-voltar-inicio">← Voltar ao Início</a>
+                <div style="flex: 1; text-align: center;">
+                    <h1 style="margin-top:0; margin-bottom: 4px;">🌱 Vida no Prato - Painel dos Colaboradores</h1>
+                    <p style="margin: 0; font-size: 0.95em;">Gerencie seus produtos e categorias</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="viewProfile()" style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">👤 Meu Perfil</button>
+                    <button onclick="logout()" style="padding: 10px 16px; background: #d32f2f; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">🚪 Sair</button>
+                </div>
+            </div>
             <div id="welcomeAnimation"
                 style="display:none;position:fixed;bottom:30px;right:30px;z-index:2000;min-width:340px;padding:22px 32px;background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(46,125,50,0.18);font-size:1.25rem;">
                 <span style="font-size:1.7rem;vertical-align:middle;margin-right:10px;">🌱</span>
@@ -162,6 +220,39 @@
             } else {
                 input.type = 'password';
                 toggle.textContent = '👁️';
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            document.getElementById(tabName === 'login' ? 'loginForm' : 'adminRegisterForm').classList.add('active');
+        }
+
+        // Variável global para armazenar dados do usuário logado
+        let usuarioLogado = null;
+
+        function viewProfile() {
+            if (usuarioLogado && usuarioLogado.id) {
+                window.location.href = `/colaborador/perfil/${usuarioLogado.id}`;
+            } else {
+                alert('Erro: dados do usuário não encontrados.');
+            }
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                usuarioLogado = null;
+                document.getElementById('adminPanelWrapper').style.display = 'none';
+                document.getElementById('authModal').style.display = 'block';
+                document.getElementById('loginForm').reset();
+                document.getElementById('adminRegisterForm').reset();
+                switchAdminTab('login');
             }
         }
 
@@ -336,20 +427,78 @@
         };
 
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('loginForm').addEventListener('submit', function (event) {
+            document.getElementById('loginForm').addEventListener('submit', async function (event) {
                 event.preventDefault();
-                if (document.getElementById('loginEmail').value === 'admin@admin' && document.getElementById('loginPassword').value === 'admin') {
-                    document.getElementById('authModal').style.display = 'none';
-                    document.getElementById('adminPanelWrapper').style.display = 'block';
-                    showWelcomeAnimation();
-                    populateCategories();
-                    displayProducts();
-                    displayCategories();
-                    setupEmojiPickers();
-                } else {
-                    alert('E-mail ou senha inválidos!');
+                const cnpjRaw = document.getElementById('loginCnpj').value;
+                const cnpj = cnpjRaw.replace(/\D/g, '');
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const res = await fetch('/auth/login-collaborator', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cnpj, senha: password })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        usuarioLogado = data.usuario;
+                        document.getElementById('authModal').style.display = 'none';
+                        document.getElementById('adminPanelWrapper').style.display = 'block';
+                        showWelcomeAnimation();
+                        populateCategories();
+                        displayProducts();
+                        displayCategories();
+                        setupEmojiPickers();
+                    } else {
+                        alert(data.message || 'CNPJ ou senha inválidos!');
+                    }
+                } catch (err) {
+                    console.error('Erro ao fazer login:', err);
+                    alert('Erro ao fazer login. Veja o console para detalhes.');
                 }
             });
+
+            // Handler para o formulário de registro do painel (CNPJ obrigatório para estabelecimento)
+            const adminRegisterForm = document.getElementById('adminRegisterForm');
+            if (adminRegisterForm) {
+                adminRegisterForm.addEventListener('submit', async (ev) => {
+                    ev.preventDefault();
+                    const nome = document.getElementById('adminRegisterName').value;
+                    const email = document.getElementById('adminRegisterEmail').value;
+                    const telefone = document.getElementById('adminRegisterPhone').value;
+                    const cnpjRaw = document.getElementById('adminRegisterCnpj').value || '';
+                    const cnpj = cnpjRaw.replace(/\D/g, '');
+                    const senha = document.getElementById('adminRegisterPassword').value;
+                    const confirmSenha = document.getElementById('adminConfirmPassword').value;
+
+                    if (senha !== confirmSenha) {
+                        alert('As senhas não coincidem!');
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch('/auth/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ nome, email, telefone, senha, cnpj })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            alert('Cadastro realizado com sucesso! Use as credenciais para entrar.');
+                            // Preenche o formulário de login com os dados recém-criados
+                            document.getElementById('loginCnpj').value = cnpj;
+                            document.getElementById('loginPassword').value = senha;
+                            switchAdminTab('login');
+                        } else {
+                            alert(data.message || 'Erro ao cadastrar.');
+                            console.error('Erro no registro:', data);
+                        }
+                    } catch (err) {
+                        console.error('Erro ao cadastrar:', err);
+                        alert('Erro ao cadastrar. Verifique o console do navegador (F12) para mais detalhes.');
+                    }
+                });
+            }
 
             document.getElementById('productForm').onsubmit = async function (e) {
                 e.preventDefault();
