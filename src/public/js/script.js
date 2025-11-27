@@ -183,6 +183,9 @@ function updateUserUI(user) {
         if(loginBtn) loginBtn.style.display = 'block';
         if(userMenu) userMenu.style.display = 'none';
     }
+    
+    // Atualizar seção mobile também
+    updateMobileUserSection();
 }
 
 function logout() {
