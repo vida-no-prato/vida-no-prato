@@ -334,3 +334,83 @@ window.addEventListener('click', (event) => {
         closeProductModal();
     }
 });
+
+// ===== MENU HAMBURGER =====
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const body = document.body;
+    
+    menu.classList.toggle('active');
+    hamburger.classList.toggle('active');
+    body.classList.toggle('menu-open');
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const body = document.body;
+    
+    menu.classList.remove('active');
+    hamburger.classList.remove('active');
+    body.classList.remove('menu-open');
+}
+
+function closeMenuAndOpenAuth() {
+    closeMobileMenu();
+    openAuthModal();
+}
+
+// Fechar menu ao clicar no overlay
+window.addEventListener('click', (event) => {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const body = document.body;
+    
+    if (body.classList.contains('menu-open') && 
+        !menu.contains(event.target) && 
+        !hamburger.contains(event.target)) {
+        closeMobileMenu();
+    }
+});
+
+// Atualizar contador de carrinho no menu mobile também
+function updateMobileCartCount() {
+    const mobileCount = document.getElementById('mobileCartCount');
+    if (mobileCount) {
+        mobileCount.textContent = cart.length;
+    }
+}
+
+// Sincronizar contadores quando carrinho muda
+function updateAllCartCounts() {
+    const desktopCount = document.getElementById('cartCount');
+    const mobileCount = document.getElementById('mobileCartCount');
+    
+    if (desktopCount) desktopCount.textContent = cart.length;
+    if (mobileCount) mobileCount.textContent = cart.length;
+}
+
+// Atualizar user menu no mobile quando usuário faz login
+function updateMobileUserSection() {
+    const loginBtn = document.getElementById('loginBtn');
+    const userMenu = document.getElementById('userMenu');
+    const mobileLoginSection = document.getElementById('mobileLoginSection');
+    const mobileUserSection = document.getElementById('mobileUserSection');
+    const mobileUserAvatar = document.getElementById('mobileUserAvatar');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (loginBtn && loginBtn.style.display === 'none') {
+        // Usuário está logado
+        mobileLoginSection.style.display = 'none';
+        mobileUserSection.style.display = 'block';
+        
+        if (userAvatar && mobileUserAvatar) {
+            mobileUserAvatar.textContent = userAvatar.textContent;
+        }
+    } else {
+        // Usuário não está logado
+        mobileLoginSection.style.display = 'block';
+        mobileUserSection.style.display = 'none';
+    }
+}

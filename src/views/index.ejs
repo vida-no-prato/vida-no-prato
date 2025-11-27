@@ -60,7 +60,52 @@
                         <span class="cart-count" id="cartCount">0</span>
                     </button>
                 </div>
+
+                <!-- Menu Hamburger -->
+                <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <!-- Top section: Login/Profile -->
+                <div class="mobile-menu-top">
+                    <div id="mobileLoginSection">
+                        <button class="mobile-login-btn" onclick="closeMenuAndOpenAuth()">
+                            👤 Entrar / Cadastro
+                        </button>
+                    </div>
+                    <div id="mobileUserSection" style="display: none;">
+                        <div class="mobile-user-profile">
+                            <div class="mobile-avatar" id="mobileUserAvatar">U</div>
+                            <div class="mobile-user-info">
+                                <a href="#" onclick="showProfile(); closeMobileMenu()">👤 Meu Perfil</a>
+                                <a href="#" onclick="showOrders(); closeMobileMenu()">📦 Meus Pedidos</a>
+                                <a href="#" onclick="logout(); closeMobileMenu()">🚪 Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="mobile-nav-links">
+                    <li><a href="/" onclick="closeMobileMenu()">🏠 Início</a></li>
+                    <li><a href="/categories" onclick="closeMobileMenu()">🏷️ Categorias</a></li>
+                    <li><a href="#produtos" onclick="closeMobileMenu()">🍲 Cardápio</a></li>
+                    <li><a href="/about" onclick="closeMobileMenu()">ℹ️ Sobre</a></li>
+                </ul>
+
+                <!-- Cart Button -->
+                <div class="mobile-menu-bottom">
+                    <button class="mobile-cart-btn" onclick="openCart(); closeMobileMenu()">
+                        🛒 Meu Carrinho
+                        <span class="cart-count" id="mobileCartCount">0</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
