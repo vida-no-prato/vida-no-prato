@@ -32,14 +32,40 @@ function setupCNPJMask(inputId) {
     });
 }
 
+function maskPhone(phone) {
+    phone = phone.replace(/\D/g, '');
+    if (phone.length > 11) phone = phone.slice(0, 11);
+    
+    if (phone.length <= 2) return phone;
+    if (phone.length <= 7) return phone.replace(/(\d{2})(\d+)/, '($1) $2');
+    return phone.replace(/(\d{2})(\d{5})(\d+)/, '($1) $2-$3');
+}
+
+function setupPhoneMask(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    input.addEventListener('input', function() {
+        this.value = maskPhone(this.value);
+    });
+}
+
 // --- FUNÇÕES DE AUTENTICAÇÃO E MODAIS ---
 function openAuthModal() { 
-    document.getElementById('authModal').style.display = 'flex';
-    // Setup CNPJ masks when modal opens
+    const authModal = document.getElementById('authModal');
+    authModal.style.display = 'flex';
+    authModal.classList.add('active');
+    // Setup masks when modal opens
     setupCNPJMask('loginCnpj');
     setupCNPJMask('adminRegisterCnpj');
+    setupPhoneMask('adminRegisterPhone');
+    setupPhoneMask('registerPhone');
 }
-function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+function closeAuthModal() { 
+    const authModal = document.getElementById('authModal');
+    authModal.style.display = 'none';
+    authModal.classList.remove('active');
+}
 
 function switchTab(tabName){
     document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
@@ -96,7 +122,7 @@ function addToCart(event, productId, btn) {
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+    updateAllCartCounts();
 
     // Notifica outras partes da página (ex: About) que o carrinho foi atualizado
     try {
@@ -190,7 +216,10 @@ function updateUserUI(user) {
 
 function logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('cart');
+    cart = [];
     updateUserUI(null);
+    updateAllCartCounts();
     window.location.reload();
 }
 
@@ -250,10 +279,14 @@ function closeProductModal() {
 
 // --- INICIALIZAÇÃO E EVENT LISTENERS ---
 document.addEventListener('DOMContentLoaded', () => {
-    updateCartCount();
+    updateAllCartCounts();
 
     const loggedUser = JSON.parse(localStorage.getItem('user'));
     updateUserUI(loggedUser);
+
+    // Inicializar máscaras de telefone
+    setupPhoneMask('registerPhone');
+    setupPhoneMask('adminRegisterPhone');
 
     const loginForm = document.getElementById('loginForm');
     if(loginForm) {
@@ -331,10 +364,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fecha modais ao clicar no fundo
 window.addEventListener('click', (event) => {
-    if (event.target.classList.contains('modal')) {
-        closeCart();
-        closeAuthModal();
-        closeProductModal();
+    // Fechar modais apenas ao clicar no fundo (background) do modal
+    const modal = event.target;
+    if (modal.id === 'cartModal' || modal.id === 'authModal' || modal.id === 'productDetailModal') {
+        if (modal.id === 'cartModal') closeCart();
+        if (modal.id === 'authModal') closeAuthModal();
+        if (modal.id === 'productDetailModal') closeProductModal();
     }
 });
 
@@ -381,7 +416,9 @@ window.addEventListener('click', (event) => {
 function updateMobileCartCount() {
     const mobileCount = document.getElementById('mobileCartCount');
     if (mobileCount) {
-        mobileCount.textContent = cart.length;
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        mobileCount.textContent = count;
+        mobileCount.style.display = count > 0 ? 'flex' : 'none';
     }
 }
 
@@ -389,9 +426,16 @@ function updateMobileCartCount() {
 function updateAllCartCounts() {
     const desktopCount = document.getElementById('cartCount');
     const mobileCount = document.getElementById('mobileCartCount');
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
     
-    if (desktopCount) desktopCount.textContent = cart.length;
-    if (mobileCount) mobileCount.textContent = cart.length;
+    if (desktopCount) {
+        desktopCount.textContent = count;
+        desktopCount.style.display = count > 0 ? 'flex' : 'none';
+    }
+    if (mobileCount) {
+        mobileCount.textContent = count;
+        mobileCount.style.display = count > 0 ? 'flex' : 'none';
+    }
 }
 
 // Atualizar user menu no mobile quando usuário faz login

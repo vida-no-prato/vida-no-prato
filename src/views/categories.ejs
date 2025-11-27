@@ -15,10 +15,113 @@
     </style>
 </head>
 <body>
+
+    <button class="cart-btn admin-btn-fixo" onclick="window.location.href='/admin'">Para Colaboradores</button>
+    
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <a href="/" class="logo">Vida no Prato</a>
+            <nav class="nav">
+                <div class="logo">Vida no Prato</div>
+                
+                <button class="cart-btn admin-btn-mobile" onclick="openCart(); closeMobileMenu()">
+                    🛒 Carrinho
+                    <span class="cart-count" id="mobileCartCount">0</span>
+                </button>
+                <ul class="nav-links">
+ 
+                    <li><a href="/">Início</a></li>
+                    
+                    <li class="nav-item-dropdown">
+                        <a href="/categories">Categorias</a> <ul class="dropdown-menu">
+                            <% if (typeof categorias !== 'undefined' && categorias.length > 0) { %>
+                                <% categorias.slice(0, 5).forEach(categoria => { // Mostra apenas as 5 primeiras, por exemplo
+                                    if (categoria && categoria.slug) { %>
+                                        <li>
+                                            <a href="/categories?categoria=<%= categoria.slug %>">
+                                                <%= categoria.emoji || '🥗' %> <%= categoria.nome %>
+                                            </a>
+                                        </li>
+                                    <% } 
+                                }) %>
+                                <li class="dropdown-divider"></li>
+                                <li><a href="/categories" class="view-all">Ver Todas as Categorias</a></li>
+                            <% } else { %>
+                                <li><a href="/categories">Ver Categorias</a></li>
+                            <% } %>
+                        </ul>
+                    </li>
+                    <li><a href="/#produtos">Cardápio</a></li>
+                    <li><a href="/about">Sobre</a></li>
+                </ul>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button class="login-btn" id="loginBtn" onclick="openAuthModal()">
+                        👤 Entrar
+                    </button>
+
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <div class="user-avatar" onclick="toggleDropdown()" id="userAvatar">
+                            U
+                        </div>
+                        <div class="dropdown" id="userDropdown" style="display: none;">
+                            <a href="#" onclick="showProfile()">👤 Meu Perfil</a>
+                            <a href="#" onclick="showOrders()">📦 Meus Pedidos</a>
+                            <a href="#" onclick="logout()">🚪 Sair</a>
+                        </div>
+                    </div>
+
+                    <button class="cart-btn" onclick="openCart()">
+                        🛒 Carrinho
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+
+                    <button class="cart-btn admin-btn-nav" onclick="window.location.href='/admin'">Para Colaboradores</button>
+                </div>
+
+                <button class="cart-btn admin-btn-fixo" onclick="window.location.href='/admin'">Para Colaboradores</button>
+
+                <!-- Menu Hamburger -->
+                <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <!-- Top section: Login/Profile -->
+                <div class="mobile-menu-top">
+                    <div id="mobileLoginSection">
+                        <button class="mobile-login-btn" onclick="closeMenuAndOpenAuth()">
+                            👤 Entrar / Cadastro
+                        </button>
+                    </div>
+                    <div id="mobileUserSection" style="display: none;">
+                        <div class="mobile-user-profile">
+                            <div class="mobile-avatar" id="mobileUserAvatar">U</div>
+                            <div class="mobile-user-info">
+                                <a href="#" onclick="showProfile(); closeMobileMenu()">👤 Meu Perfil</a>
+                                <a href="#" onclick="showOrders(); closeMobileMenu()">📦 Meus Pedidos</a>
+                                <a href="#" onclick="logout(); closeMobileMenu()">🚪 Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="mobile-nav-links">
+                    <li><a href="/" onclick="closeMobileMenu()">🏠 Início</a></li>
+                    <li><a href="/categories" onclick="closeMobileMenu()">🏷️ Categorias</a></li>
+                    <li><a href="/#produtos" onclick="closeMobileMenu()">🍲 Cardápio</a></li>
+                    <li><a href="/about" onclick="closeMobileMenu()">ℹ️ Sobre</a></li>
+                </ul>
+
+                <!-- Cart Button -->
+                <div class="mobile-menu-bottom">
+                    <button class="mobile-cart-btn" onclick="window.location.href='/admin'; closeMobileMenu()">
+                        👥 Para Colaboradores
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -96,15 +199,15 @@
     <% } %>
     </main>
 
-    <script src="/js/script.js"></script>
-</body>
-</html>
+    <%- include('partials/modals') %>
 
-    <style>
-        .category-card-link {
-            text-decoration: none;
-            color: inherit;
-        }
-    </style>
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content product-detail-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <div id="modalProductContent"></div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
 </body>
 </html>

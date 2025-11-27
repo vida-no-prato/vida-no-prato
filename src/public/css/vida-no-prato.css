@@ -268,7 +268,7 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     font-size: clamp(12px, 2.5vw, 14px);
     white-space: nowrap;
 }
@@ -280,14 +280,14 @@ body {
 
 .cart-count {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: -6px;
+    right: -6px;
     background: #ff4444;
     color: white;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
+    width: 20px;
+    height: 20px;
+    display: none;
     align-items: center;
     justify-content: center;
     font-size: clamp(10px, 2vw, 12px);
@@ -304,6 +304,10 @@ body {
     padding: clamp(8px, 2vw, 10px) clamp(12px, 2vw, 16px);
     font-size: clamp(11px, 2vw, 12px);
     border-radius: 20px;
+    display: none;
+}
+
+.admin-btn-nav {
     display: none;
 }
 
@@ -933,7 +937,14 @@ body.menu-open::before {
     animation: fadeIn 0.3s ease;
     backdrop-filter: blur(5px);
     overflow-y: auto;
-    padding: clamp(10px, 2vw, 20px) 0;
+    padding: clamp(10px, 2vw, 20px);
+}
+
+.auth-modal.active,
+.auth-modal[style*="display: block"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .auth-modal-content {
@@ -946,6 +957,8 @@ body.menu-open::before {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
     animation: slideInDown 0.5s ease;
     overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .auth-header {
@@ -1005,6 +1018,8 @@ body.menu-open::before {
 
 .auth-body {
     padding: 40px;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .auth-tabs {
@@ -1334,7 +1349,7 @@ body.menu-open::before {
 
 /* Cart Modal */
 .modal {
-    display: none;
+    display: none !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -1344,17 +1359,26 @@ body.menu-open::before {
     z-index: 2000;
     animation: fadeIn 0.3s ease;
     overflow-y: auto;
-    padding: clamp(10px, 2vw, 20px) 0;
+    padding: clamp(10px, 2vw, 20px);
+}
+
+.modal.active,
+.modal[style*="display: block"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .modal-content {
     background: white;
-    width: min(90vw, 500px);
+    width: min(95vw, 600px);
     margin: auto;
     border-radius: 18px;
     padding: clamp(20px, 4vw, 30px);
     position: relative;
     animation: slideInDown 0.5s ease;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .close {
@@ -1507,6 +1531,14 @@ body.menu-open::before {
 @media (min-width: 769px) and (max-width: 899px) {
     .admin-btn-fixo {
         display: none !important;
+    }
+
+    .admin-btn-nav {
+        display: block !important;
+    }
+
+    .nav > div[style*="display: flex"] {
+        display: flex !important;
     }
 }
 
@@ -2098,50 +2130,57 @@ body.menu-open::before {
 
 /* --- ESTILOS DO MODAL DE DETALHES DO PRODUTO --- */
 .product-detail-content {
-    max-width: min(90vw, 700px);
+    max-width: min(95vw, 600px);
+    width: 100%;
     padding: 0;
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    overflow: hidden;
 }
 
 .product-detail-content .modal-product-image {
     width: 100%;
-    height: clamp(200px, 50vw, 300px);
+    height: clamp(250px, 60vw, 400px);
     object-fit: cover;
-    border-radius: 16px 16px 0 0;
 }
 
 .modal-product-info {
-    padding: clamp(16px, 3vw, 30px);
+    padding: clamp(16px, 4vw, 24px);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-product-name {
-    font-size: clamp(20px, 5vw, 28px);
+    font-size: clamp(18px, 5vw, 24px);
     font-weight: bold;
     color: #2e7d32;
-    margin-bottom: 15px;
-    line-height: 1.2;
+    margin-bottom: 12px;
+    line-height: 1.3;
 }
 
 .modal-product-description {
-    font-size: clamp(13px, 2.5vw, 16px);
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: clamp(13px, 3vw, 15px);
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .modal-product-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: auto;
     border-top: 1px solid #eee;
-    padding-top: 20px;
-    gap: 10px;
-    flex-wrap: wrap;
+    padding-top: 16px;
+    gap: 12px;
 }
 
 .modal-product-price {
-    font-size: clamp(20px, 5vw, 28px);
+    font-size: clamp(20px, 5vw, 26px);
     font-weight: bold;
     color: #4caf50;
 }
@@ -2150,12 +2189,13 @@ body.menu-open::before {
     background: linear-gradient(135deg, #4caf50, #2e7d32);
     color: white;
     border: none;
-    padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 24px);
+    padding: clamp(10px, 2.5vw, 12px) clamp(14px, 3vw, 20px);
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
     font-size: clamp(12px, 2.5vw, 14px);
+    white-space: nowrap;
 }
 
 .modal-add-to-cart:hover {

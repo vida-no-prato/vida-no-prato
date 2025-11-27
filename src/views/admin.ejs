@@ -27,13 +27,12 @@
                 <form class="auth-form active" id="loginForm">
                     <div class="form-group">
                         <label for="loginCnpj">CNPJ (estabelecimento)</label>
-                        <input type="password" id="loginCnpj" placeholder="00.000.000/0000-00" required>
-                        <span class="password-toggle" onclick="toggleCNPJMask('loginCnpj')">👁️</span>
+                        <input type="text" id="loginCnpj" placeholder="00.000.000/0000-00" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="loginPassword">Senha</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="off">
                         <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
                     </div>
                     
@@ -61,19 +60,18 @@
 
                     <div class="form-group">
                         <label for="adminRegisterCnpj">CNPJ do Estabelecimento</label>
-                        <input type="password" id="adminRegisterCnpj" placeholder="00.000.000/0000-00" required>
-                        <span class="password-toggle" onclick="toggleCNPJMask('adminRegisterCnpj')">👁️</span>
+                        <input type="text" id="adminRegisterCnpj" placeholder="00.000.000/0000-00" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="adminRegisterPassword">Senha</label>
-                        <input type="password" id="adminRegisterPassword" placeholder="Mínimo 6 caracteres" required>
+                        <input type="password" id="adminRegisterPassword" placeholder="Mínimo 6 caracteres" required autocomplete="off">
                         <span class="password-toggle" onclick="togglePassword('adminRegisterPassword')">👁️</span>
                     </div>
                     
                     <div class="form-group">
                         <label for="adminConfirmPassword">Confirmar Senha</label>
-                        <input type="password" id="adminConfirmPassword" placeholder="Confirme sua senha" required>
+                        <input type="password" id="adminConfirmPassword" placeholder="Confirme sua senha" required autocomplete="off">
                         <span class="password-toggle" onclick="togglePassword('adminConfirmPassword')">👁️</span>
                     </div>
                     
@@ -261,6 +259,24 @@
             
             input.addEventListener('input', function() {
                 this.value = formatCNPJ(this.value);
+            });
+        }
+
+        function maskPhone(phone) {
+            phone = phone.replace(/\D/g, '');
+            if (phone.length > 11) phone = phone.slice(0, 11);
+            
+            if (phone.length <= 2) return phone;
+            if (phone.length <= 7) return phone.replace(/(\d{2})(\d+)/, '($1) $2');
+            return phone.replace(/(\d{2})(\d{5})(\d+)/, '($1) $2-$3');
+        }
+
+        function setupPhoneMask(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            
+            input.addEventListener('input', function() {
+                this.value = maskPhone(this.value);
             });
         }
 
@@ -499,6 +515,7 @@
             // Inicializar máscaras de CNPJ
             setupCNPJMask('loginCnpj');
             setupCNPJMask('adminRegisterCnpj');
+            setupPhoneMask('adminRegisterPhone');
             
             document.getElementById('loginForm').addEventListener('submit', async function (event) {
                 event.preventDefault();
